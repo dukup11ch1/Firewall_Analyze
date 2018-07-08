@@ -69,7 +69,7 @@ while True:
         if "src_ip" in s:
             temp=s.split('=')[1]
             ttemp=temp.split('.')
-            src_ip=int(ttemp[0])*16777216+int(ttemp[1])*65536+int(ttemp[2])*256+int(ttemp[3])
+            src_ip=int(ttemp[0])*16777216+int(ttemp[1])*65536+int(ttemp[2])*256+int(ttemp[3])#비트를 전부 이어서 int화
         if "dst_ip" in s:
             temp=s.split('=')[1]
             ttemp=temp.split('.')
@@ -81,7 +81,8 @@ while True:
         if "dst_port" in s:
             dst_port=int(s.split('=')[1])
     with conn.cursor() as cursor:
-        sql = 'INSERT INTO firewall (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
+        sql = 'INSERT INTO firewall (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'#sql에 넣음
         cursor.execute(sql, (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port))
     conn.commit()
     
+conn.close()
