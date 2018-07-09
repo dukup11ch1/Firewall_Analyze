@@ -27,17 +27,10 @@ while True:
     for s in b:
         if "dst_ip" in s:
             temp=s.split('=')[1]
-            '''inq=True
-            if temp in ip:
-                inx=ip.index(temp)
-                continue
-            ip.append(temp)#ip리스트에 없으면 추가
-            le.append(0)
-            inx=ip.index(temp)'''
             if temp in ip:
                 continue
             print temp
-            
+
 
 print ip
 print le
