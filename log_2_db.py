@@ -81,6 +81,8 @@ while True:
     if dst_ip =='175.45.178.3':
         ttemp=temp.split('.')
         dst_ip=int(ttemp[0])*16777216+int(ttemp[1])*65536+int(ttemp[2])*256+int(ttemp[3])
+    else :
+        continue
     with conn.cursor() as cursor:
         sql = 'INSERT INTO firewall (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'#sql에 넣음
         cursor.execute(sql, (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port))
