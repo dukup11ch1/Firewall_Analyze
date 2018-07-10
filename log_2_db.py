@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 import pymysql
 
-fp = open('firewall.log','r')
+fp = open('../firewall.log','r')
 def read_space(): #한 줄 읽기
     a=""
     while True:
@@ -61,11 +61,17 @@ while True:
     time=time.replace("-","")
     time=int(time)
     src_mac=dst_mac=src_ip=dst_ip=length=src_port=dst_port=""
+    
+    if b[-1] !='175.45.178.3':
+        continue
+
     for s in b:#데이터 나누기
         if "src_mac" in s:
             src_mac=s.split('=')[1]
         if "dst_mac" in s:
             dst_mac=s.split('=')[1]
+            ttemp=temp.split('.')
+            dst_ip=int(ttemp[0])*16777216+int(ttemp[1])*65536+int(ttemp[2])*256+int(ttemp[3])
         if "src_ip" in s:
             temp=s.split('=')[1]
             ttemp=temp.split('.')
@@ -78,11 +84,7 @@ while True:
             src_port=int(s.split('=')[1])
         if "dst_port" in s:
             dst_port=int(s.split('=')[1])
-    if dst_ip =='175.45.178.3':
-        ttemp=temp.split('.')
-        dst_ip=int(ttemp[0])*16777216+int(ttemp[1])*65536+int(ttemp[2])*256+int(ttemp[3])
-    else :
-        continue
+
     with conn.cursor() as cursor:
         sql = 'INSERT INTO firewall (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'#sql에 넣음
         cursor.execute(sql, (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port))
