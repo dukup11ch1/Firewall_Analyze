@@ -56,14 +56,13 @@ while True:
     except:
         break
     b=a.split(" ")
+    if b[-1] !='175.45.178.3':
+        continue
     time = b[0]+b[1]
     time=time.replace(":","")
     time=time.replace("-","")
     time=int(time)
     src_mac=dst_mac=src_ip=dst_ip=length=src_port=dst_port=""
-    
-    if b[-1] !='175.45.178.3':
-        continue
 
     for s in b:#데이터 나누기
         if "src_mac" in s:
