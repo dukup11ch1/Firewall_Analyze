@@ -11,6 +11,7 @@ def read_space():
             b=fp.read(1)
             if b=='2':
                 fp.seek(-1,1)
+                del b
                 return a
             a=a+b
 
@@ -61,8 +62,8 @@ while True:
     #총 종류 18개
     #index-> 18*a+subindex
     for i in xrange(len(b)/18):
-        if b[18*i+17] != '175.45.178.3':#미리 찾은 ip만 찾아 디비에 넣기 위함
-            continue
+        #if b[18*i+17] != '175.45.178.3':#미리 찾은 ip만 찾아 디비에 넣기 위함
+        #    continue
         time=int(b[18*i].replace("-","")+b[18*i+1].replace(":",""))
         src_mac=b[18*i+11].split('=')[1]
         dst_mac=b[18*i+12].split('=')[1]
@@ -83,6 +84,16 @@ while True:
             sql = 'INSERT INTO firewall (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'#db에 넣어줌
             cursor.execute(sql, (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port))
         conn.commit()
+        del time
+        del src_ip
+        del dst_ip
+        del src_mac
+        del dst_mac
+        del length
+        del src_port
+        del dst_port
+        del temp
+        del ttemp
     #메모리 최적화를 위한 변수 삭제
     del b
     
