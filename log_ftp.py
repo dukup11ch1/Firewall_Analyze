@@ -1,19 +1,17 @@
 # -*-coding:utf-8 -*-
 
 fp = open('../firewall.log','r')
-def read_space(): #스페이스 단위로 읽기위한 read 함수 새로만듦
-    a=""
-    while True:
+def read_space(): 
+    a=fp.read(1024*1024*1024)#1GB씩 읽는다
+    while True:#1GB읽고 끊을 지점 탐색
         b=fp.read(1)
         a=a+b
         if b==' ':
             b=fp.read(1)
             if b=='2':
                 fp.seek(-1,1)
-                break
+                return a
             a=a+b
-
-    return a
 
 ip=[]#송신자 ip
 le=[]#ip별 전체 길이
@@ -25,20 +23,16 @@ while True:
     except:
         break
     b=a.split(" ")
-    for s in b:
-        if "dst_ip" in s:
-            temp=s.split('=')[1]
-            inq=True
-            if temp in ip:
-                inx=ip.index(temp)
-                continue
-            ip.append(temp)#ip리스트에 없으면 추가
-            le.append(0)
+    for i in xrange(len(b)/18):
+        temp=b[18*i+17].split('=')[1]
+        if temp in ip:
             inx=ip.index(temp)
-        if "length" in s:
-            if inq:
-                inq=False
-                le[inx]+=int(s.split('=')[1])#length 계산
+            continue
+        ip.append(temp)#ip리스트에 없으면 추가
+        le.append(0)
+        inx=ip.index(temp)
+        le[inx]+=int(b[18*i+15])#length 계산
 
+            
 print ip
 print le
