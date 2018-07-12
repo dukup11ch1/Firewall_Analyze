@@ -56,6 +56,7 @@ while True:
     except:
         break
     b=a.split(" ")
+    del a
     #2018-06-28 08:09:33 fl0ckfl0ck_info id=3087 severity=info sys=SecureNet sub=Packetfilter name=Packet Accepted action=Accepted fwrule=90 src_mac=b8:ae:ed:7b:56:73 dst_mac=26:3a:ca:22:d1:bf src_ip=181.141.148.69 dst_ip=188.18.109.220 length=3808 srcport=20064 dst_port=23
     #총 종류 18개
     #index-> 18*a+subindex
@@ -82,7 +83,7 @@ while True:
             sql = 'INSERT INTO firewall (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'#db에 넣어줌
             cursor.execute(sql, (time, src_mac,dst_mac,src_ip,dst_ip,length,src_port,dst_port))
         conn.commit()
-    del a#메모리 최적화를 위한 변수 삭제
+    #메모리 최적화를 위한 변수 삭제
     del b
     
 conn.close()
