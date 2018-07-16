@@ -1,10 +1,10 @@
 # -*-coding:utf-8 -*-
 import pymysql
 
-fp = open('../firewall.log','r')#파일 읽어옴
+fp = open('../firewall.log','r')#open log file
 def read_space(): 
-    a=fp.read(1024*1024*1024)#1GB씩 읽는다
-    while True:#1GB읽고 끊을 지점 탐색
+    a=fp.read(1024*1024*1024)#1GB read
+    while True:#after 1GB read, search breakpoint
         b=fp.read(1)
         a=a+b
         if b==' ':
@@ -18,7 +18,7 @@ def read_space():
 conn = pymysql.connect(host='localhost',
     user='root',
     password='root',
-    charset='utf8mb4')#mysql연결
+    charset='utf8mb4')#mysql connect
 try :
     with conn.cursor() as cursor:
         sql='DROP DATABASE firewall'
@@ -30,11 +30,11 @@ with conn.cursor() as cursor:
     sql = 'CREATE DATABASE firewall'
     cursor.execute(sql)
     sql = 'USE firewall'
-    cursor.execute(sql)#db 초기화
+    cursor.execute(sql)#db reset
 
 
 
-with conn.cursor() as cursor:#테이블 생성
+with conn.cursor() as cursor:#create table
     sql = '''
         CREATE TABLE firewall (
             id int(255) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -59,11 +59,11 @@ while True:
     b=a.split(" ")
     del a
     #2018-06-28 08:09:33 fl0ckfl0ck_info id=3087 severity=info sys=SecureNet sub=Packetfilter name=Packet Accepted action=Accepted fwrule=90 src_mac=b8:ae:ed:7b:56:73 dst_mac=26:3a:ca:22:d1:bf src_ip=181.141.148.69 dst_ip=188.18.109.220 length=3808 srcport=20064 dst_port=23
-    #총 종류 18개
+    #18 variables
     #index-> 18*a+subindex
     for i in xrange(len(b)/18):
-        #if b[18*i+17] != '175.45.178.3':#미리 찾은 ip만 찾아 디비에 넣기 위함
-        #    continue
+        if b[18*i+17] != '175.45.178.3':#push only bad ip
+            continue
         time=int(b[18*i].replace("-","")+b[18*i+1].replace(":",""))
         src_mac=b[18*i+11].split('=')[1]
         dst_mac=b[18*i+12].split('=')[1]
@@ -94,7 +94,7 @@ while True:
         del dst_port
         del temp
         del ttemp
-    #메모리 최적화를 위한 변수 삭제
+    #delete variables for memory
     del b
     
 conn.close()
